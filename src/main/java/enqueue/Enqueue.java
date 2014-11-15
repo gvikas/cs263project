@@ -17,12 +17,15 @@ import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 public class Enqueue extends HttpServlet {
  protected void doPost(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
-     String audiokey = request.getParameter("audiokey");
-     String audiovalue = request.getParameter("audiovalue");
-     System.out.println("enq: "+ audiokey + ": " + audiovalue);
+     String challengeKey;
+     String title = request.getParameter("title");
+     String description = request.getParameter("description");
+     
+     
+     System.out.println("Enqueue: title:  "+ title + "description: " + description);
      // Add the task to the default queue.
      Queue queue = QueueFactory.getDefaultQueue();
-     queue.add(withUrl("/worker").param("audiokey", audiokey).param("audiovalue", audiovalue).param("date", new Date().toString()));
+     queue.add(withUrl("/worker").param("title", title).param("description", description).param("date", new Date().toString()));
  
 
      response.sendRedirect("/done.html");

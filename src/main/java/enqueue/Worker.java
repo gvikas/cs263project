@@ -18,15 +18,17 @@ import com.google.appengine.api.datastore.Entity;
 public class Worker extends HttpServlet {
  protected void doPost(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
-     String key = request.getParameter("key");
-     String value = request.getParameter("value");
+	 String challengeKey;
+     String title = request.getParameter("title");
+     String description = request.getParameter("description");
      String date = request.getParameter("date");
      
-     Entity taskdata = new Entity("TaskData", key);
-     taskdata.setProperty("value", value);
-     taskdata.setProperty("date", date);
+     Entity challengePost = new Entity("ChallengePost", challengeKey);
+     challengePost.setProperty("title", title);
+     challengePost.setProperty("description", description);
+     challengePost.setProperty("date", date);
      
-     System.out.println("Worker: "+key+"Value: "+value);
+     System.out.println("Worker: title:  "+ title +"description: "+ description);
 
      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
      datastore.put(taskdata);

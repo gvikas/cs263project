@@ -34,7 +34,7 @@ public class ReadData extends HttpServlet {
 //   // Key taskDataKey = KeyFactory.createKey("Guestbook", guestbookName);
 //    // Run an ancestor query to ensure we see the most up-to-date
 //    // view of the Greetings belonging to the selected Guestbook.
-		Query query = new Query("TaskData").addSort("date", Query.SortDirection.DESCENDING);
+		Query query = new Query("ChallengePost").addSort("date", Query.SortDirection.DESCENDING);
 		List<Entity> tasks = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
 		
 		String message = "";
