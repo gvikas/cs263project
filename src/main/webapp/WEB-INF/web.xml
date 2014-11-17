@@ -47,7 +47,7 @@
     </servlet-mapping>
      <servlet-mapping>
         <servlet-name>readdata</servlet-name>
-        <url-pattern>/test</url-pattern>
+        <url-pattern>/challenges</url-pattern>
     </servlet-mapping>
 
 

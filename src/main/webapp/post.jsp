@@ -1,3 +1,10 @@
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
+
+<%
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+%>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,7 +19,7 @@
 
     <div class="col-lg-6">
       <div class="well bs-component">
-  	 <form class="form-horizontal" action="/enqueue" method="post" enctype="multipart/form-data">
+  	 <form class="form-horizontal" action="<%= blobstoreService.createUploadUrl("/enqueue")%>" method="post" enctype="multipart/form-data">
      <fieldset>
       <legend>Create your challenge</legend>
    	  <div class="form-group">
@@ -38,7 +45,7 @@
 
       <div class="form-group">
       	<div class="col-lg-10">
-   		   <input class="btn btn-primary" type="submit" name="submt" >
+   		   <input class="btn btn-primary" type="submit" name="Submt" value="Submit" >
    		</div>
    	  </div>
   </fieldset>
