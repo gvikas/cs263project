@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 
@@ -28,14 +29,15 @@ public class Enqueue extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
      String challengeKey = challengeID.getUniqueID().toString();
+		//Key challengeKey = KeyFactory.ma
      String title = request.getParameter("title");
      String description = request.getParameter("description");
      
      Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(request);
      BlobKey blobKey = blobs.get("image");
      
-     System.out.println("Blobkey of image:" + blobKey);
-     System.out.println("Enqueue: challengeKey: " + challengeKey + "title:  "+ title + "description: " + description);
+     //System.out.println("Blobkey of image:" + blobKey);
+     //System.out.println("Enqueue: challengeKey: " + challengeKey + "title:  "+ title + "description: " + description);
      // Add the task to the default queue.
      Queue queue = QueueFactory.getDefaultQueue();
      queue.add(withUrl("/worker").param("challengeKey", challengeKey).param("title", title).param("description", description).param("blobKey", blobKey.getKeyString()).param("date", new Date().toString()));
@@ -47,7 +49,8 @@ public class Enqueue extends HttpServlet {
      if (blobKey == null) {
          response.sendRedirect("/");
      } else {
-         response.sendRedirect("/challenges");
+         //response.sendRedirect("/challenges");
+         response.sendRedirect("/challengepost.jsp?challengeKey="+challengeKey);
      }
  }
 }

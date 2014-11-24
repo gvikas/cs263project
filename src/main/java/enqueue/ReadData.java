@@ -18,19 +18,15 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
 public class ReadData extends HttpServlet {
 	
-	private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+	//private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -53,21 +49,17 @@ public class ReadData extends HttpServlet {
 			String printTitle = challenge.getProperty("title").toString();
 			String printValue = challenge.getProperty("description").toString();
 			String printDate = challenge.getProperty("date").toString();
-	        BlobKey blobKey = new BlobKey((String) challenge.getProperty("blobKey"));
+	        BlobKey blobKey = new BlobKey(challenge.getProperty("blobKey").toString());
 	        String imageUrl = imagesService.getServingUrl(blobKey);
-	      
-			
+	      		
 			message += "<p>"+printKey+": "+ "Title: " + printTitle + " Description: " + printValue + ", Date: "+printDate+"</p>"+ "<img src=\""+imageUrl+"\" height=42 width=42>";
 		    	      
-	        System.out.println("Key"+printKey+": "+ "Title: " + printTitle + " Description: " + printValue + ", Date: "+printDate+"blobKey :" +blobKey);
-		}
-		
+	        //System.out.println("Key"+printKey+": "+ "Title: " + printTitle + " Description: " + printValue + ", Date: "+printDate+"blobKey :" +blobKey);
+		}	
 		message+="</body></html>";
        
-
-		
 		PrintWriter out = response.getWriter();
-		out.println(message);
-     
+		out.println(message);   
 	}
+	
 }

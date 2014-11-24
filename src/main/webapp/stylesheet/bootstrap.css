@@ -16,6 +16,9 @@ body {
   margin: 0;
   background-color: #E4E8ED;
 }
+div{
+  vertical-align: middle; 
+}
 article,
 aside,
 details,

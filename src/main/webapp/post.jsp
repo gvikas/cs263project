@@ -17,7 +17,7 @@
   <body>
   	<div class="container">
 
-    <div class="col-lg-6">
+    <div class="col-lg-6 col-lg-offset-3">
       <div class="well bs-component">
   	 <form class="form-horizontal" action="<%= blobstoreService.createUploadUrl("/enqueue")%>" method="post" enctype="multipart/form-data">
      <fieldset>
