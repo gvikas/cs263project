@@ -18,6 +18,8 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -25,7 +27,6 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
 public class ReadData extends HttpServlet {
-	
 	//private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	
@@ -57,9 +58,24 @@ public class ReadData extends HttpServlet {
 	        //System.out.println("Key"+printKey+": "+ "Title: " + printTitle + " Description: " + printValue + ", Date: "+printDate+"blobKey :" +blobKey);
 		}	
 		message+="</body></html>";
-       
 		PrintWriter out = response.getWriter();
 		out.println(message);   
 	}
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String challengeKey = request.getParameter("challengeKey");
+		System.out.println("Hello, doDelete is been called");
+		if (challengeKey == null || challengeKey.isEmpty()){
+			response.sendRedirect("/miss.html");
+			System.out.println("challengeKey is missing: "+challengeKey);
+		}
+		else{ 
+			Key challengePostKey = KeyFactory.createKey("ChallengePost", challengeKey);
+			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		    datastore.delete(challengePostKey);
+		    response.sendRedirect("/challenges.jsp"); 
+		}
+	}
+	
 	
 }

@@ -22,7 +22,8 @@
 <html>
   <head>
     <title>uChallenge</title>
-    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- For testing purpose--> 
+    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> 
+    <script src="/js/httpRequests.js" type="text/javascript"></script><!-- For testing purpose--> 
   </head>
   
   <body>
@@ -48,7 +49,7 @@
 					</thead> 
 					<tbody>
 						<%for (Entity challenge : challenges) {
-						String printKey = challenge.getKey().getName();
+						String challengeKey = challenge.getKey().getName();
 						String viewTitle = challenge.getProperty("title").toString();
 						String viewDescription = challenge.getProperty("description").toString();
 						String viewDate = challenge.getProperty("date").toString();
@@ -56,13 +57,13 @@
 	        			String imageUrl = imagesService.getServingUrl(blobKey);%> 
 
 	        			<tr>
-	        				<td><%= printKey %></td>
+	        				<td><%= challengeKey %></td>
 	        				<td><%= viewTitle %></td>
 	        				<td><%= viewDescription %></td>
 	        				<td><img src=<%= imageUrl %> height=64 width=64></td>
 	        				<td><%= viewDate%> </td>
-	        				<td><a class="btn btn-success" href="/challengepost.jsp?challengeKey=<%= printKey %>">Accept</a></td>
-	        				<td><a class="btn btn-danger" href="#">Delete</input> </td> <!-- Add a delete function -->
+	        				<td><a class="btn btn-success" href="/challengepost.jsp?challengeKey=<%= challengeKey %>">Accept</a></td>
+	        				<td><input type="button" value="Delete" onclick="sendDeleteRequest(<%= challengeKey %>)"/> </td> <!-- Add a delete function -->
 	        				
 	        			</tr>
 	        <%
