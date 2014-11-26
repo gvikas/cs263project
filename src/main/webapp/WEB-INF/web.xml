@@ -34,8 +34,8 @@
         <servlet-class>enqueue.Worker</servlet-class>
     </servlet>
         <servlet>
-        <servlet-name>readdata</servlet-name>
-        <servlet-class>enqueue.ReadData</servlet-class>
+        <servlet-name>challenges</servlet-name>
+        <servlet-class>enqueue.Challenges</servlet-class>
     </servlet>
 	<servlet-mapping>
         <servlet-name>enqueue</servlet-name>
@@ -46,7 +46,7 @@
         <url-pattern>/worker</url-pattern>
     </servlet-mapping>
      <servlet-mapping>
-        <servlet-name>readdata</servlet-name>
+        <servlet-name>challenges</servlet-name>
         <url-pattern>/challenges</url-pattern>
     </servlet-mapping>
 

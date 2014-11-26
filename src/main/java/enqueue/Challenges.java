@@ -26,7 +26,7 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
-public class ReadData extends HttpServlet {
+public class Challenges extends HttpServlet {
 	//private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	
@@ -64,10 +64,8 @@ public class ReadData extends HttpServlet {
 	
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String challengeKey = request.getParameter("challengeKey");
-		System.out.println("Hello, doDelete is been called");
 		if (challengeKey == null || challengeKey.isEmpty()){
 			response.sendRedirect("/miss.html");
-			System.out.println("challengeKey is missing: "+challengeKey);
 		}
 		else{ 
 			Key challengePostKey = KeyFactory.createKey("ChallengePost", challengeKey);

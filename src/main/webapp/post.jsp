@@ -23,14 +23,14 @@
      <fieldset>
       <legend>Create your challenge</legend>
    	  <div class="form-group">
-     	 <div class="col-lg-10">
+     	 <div class="col-lg-6">
      		 <input type="text" class="form-control" placeholder="Title" name="title">
      	 </div>
   		<br>
    	  </div> 
 
    	  <div class="form-group">
-      	<div class="col-lg-10">
+      	<div class="col-lg-6">
      		 <textarea class="form-control" style="resize:none" cols="40" rows="5" placeholder="Description" name="description"></textarea>
      	</div>
    	  </div>
@@ -38,13 +38,13 @@
    	  <br>
  
       <div class="form-group">
-      	<div class="col-lg-10">
+      	<div class="col-lg-6">
       	<input class="btn btn-primary" type="file" name="image" accept="image/*;capture=camera">
       	</div>
       </div>
 
       <div class="form-group">
-      	<div class="col-lg-10">
+      	<div class="col-lg-6">
    		   <input class="btn btn-primary" type="submit" name="Submt" value="Submit" >
    		</div>
    	  </div>

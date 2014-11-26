@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -21,6 +23,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import cs263project.cs263project.KeyGenerator;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
+
+
 public class Enqueue extends HttpServlet {
 	
 	protected KeyGenerator challengeID = new KeyGenerator(0);
@@ -28,7 +32,7 @@ public class Enqueue extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
          throws ServletException, IOException {
-     String challengeKey = challengeID.getUniqueID().toString();
+     String challengeKey = RandomStringUtils.random(16,true,true);
 		//Key challengeKey = KeyFactory.ma
      String title = request.getParameter("title");
      String description = request.getParameter("description");
@@ -50,7 +54,7 @@ public class Enqueue extends HttpServlet {
          response.sendRedirect("/");
      } else {
          //response.sendRedirect("/challenges");
-         response.sendRedirect("/challengepost.jsp?challengeKey="+challengeKey);
+         response.sendRedirect("/challengeview.jsp?challengeKey="+challengeKey);
      }
  }
 }

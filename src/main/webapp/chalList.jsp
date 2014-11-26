@@ -23,29 +23,32 @@
   <head>
     <title>uChallenge</title>
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> 
-    <link rel="stylesheet" type="text/css" href="stylesheet/style.css"> 
     <script src="/js/httpRequests.js" type="text/javascript"></script><!-- For testing purpose--> 
   </head>
   
   <body>
 	<div class="container">
-		<div class="col-lg-6 col-lg-offset-3">
-			<div class="well bs-component">
+		<div class="bs-docs-section">
+			<div class="col-lg-6 col-lg-offset-3">
 				<div class="page-header">
-					<h1 id="tables"> Your Challenges </h1>
+					<h1 id="tables"> Challenges </h1>
 				</div>
-				<%if(challenges.isEmpty()){ %>
-					
-					<fieldset class="whiteborder">
-					
-					<p> Sorry, you have no more challenges <p>
 
-					</fieldset>
-					
-<%				
-				}else {
-				
-				for (Entity challenge : challenges) {
+				<div class="bs-component">
+					<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+						<th>Key</th>
+                    	<th>Title</th>
+                    	<th>Description</th>
+                    	<th>Image</th>
+                    	<th>Date </th>
+                    	<th>Accept</th>
+                    	<th>Delete</th>
+						</tr>
+					</thead> 
+					<tbody>
+						<%for (Entity challenge : challenges) {
 						String challengeKey = challenge.getKey().getName();
 						String viewTitle = challenge.getProperty("title").toString();
 						String viewDescription = challenge.getProperty("description").toString();
@@ -53,30 +56,28 @@
 	        			BlobKey blobKey = new BlobKey(challenge.getProperty("blobKey").toString());
 	        			String imageUrl = imagesService.getServingUrl(blobKey);%> 
 
-  								<fieldset class="whiteborder">
-									<h3> <%= viewTitle %></h3>
-									
-									<h5> Description:  <%= viewDescription %>  </h5>
-
-									<img src=<%= imageUrl %> height=512 width=512> 
-
-									<br>
-
-									<h5> Date: <%= viewDate %> </h5>
-
-									<a class="btn btn-success" href="/newpost.jsp?challengeKey=<%= challengeKey %>">Accept</a>
-
-									<input type="button" class= "btn btn-danger" value="Delete" onclick="sendDeleteRequest(<%= challengeKey %>)"/>
-
-								</fieldset>
+	        			<tr>
+	        				<td><%= challengeKey %></td>
+	        				<td><%= viewTitle %></td>
+	        				<td><%= viewDescription %></td>
+	        				<td><img src=<%= imageUrl %> height=64 width=64></td>
+	        				<td><%= viewDate%> </td>
+	        				<td><a class="btn btn-success" href="/challengeview.jsp?challengeKey=<%= challengeKey %>">Accept</a></td>
+	        				<td><input class="btn btn-danger" type="button" value="Delete" onclick="sendDeleteRequest(<%= challengeKey %>)"/> </td> <!-- Add a delete function -->
+	        				
+	        			</tr>
 	        <%
-				}
 	    }
 	    %> 
 
-					
-	    </div>
-	  </div>  
+
+					</tbody>
+					</table>
+				</div>		
+			</div>
+		</div>
+
+
  	</div>
   </body>
 </html>

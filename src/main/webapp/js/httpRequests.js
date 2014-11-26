@@ -1,4 +1,3 @@
-document.getElementById("delete").onclick = function() {sendDeleteRequest()};
 
 function sendDeleteRequest(challengeKey) {
 	var xhr = new XMLHttpRequest();
