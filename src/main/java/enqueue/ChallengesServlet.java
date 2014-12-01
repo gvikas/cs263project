@@ -26,7 +26,7 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
-public class Challenges extends HttpServlet {
+public class ChallengesServlet extends HttpServlet {
 	//private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	

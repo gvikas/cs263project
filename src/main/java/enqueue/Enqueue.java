@@ -40,7 +40,6 @@ public class Enqueue extends HttpServlet {
      Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(request);
      BlobKey blobKey = blobs.get("image");
      
-     //System.out.println("Blobkey of image:" + blobKey);
      //System.out.println("Enqueue: challengeKey: " + challengeKey + "title:  "+ title + "description: " + description);
      // Add the task to the default queue.
      Queue queue = QueueFactory.getDefaultQueue();
@@ -51,7 +50,7 @@ public class Enqueue extends HttpServlet {
      //response.sendRedirect("/tqueue.jsp?key="+key);
      
      if (blobKey == null) {
-         response.sendRedirect("/");
+         response.sendRedirect("/miss.html");
      } else {
          //response.sendRedirect("/challenges");
          response.sendRedirect("/challengeview.jsp?challengeKey="+challengeKey);
