@@ -10,9 +10,9 @@
   <head>
     <title>uChallenge</title>
     
-    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap2.css"> <!-- Customizes--> 
+    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customizes--> 
    
-   <!-- <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> -->
    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap-responsive.css">
    
 
@@ -44,7 +44,7 @@
  
       <div class="form-group">
       	<div class="col-lg-6">
-      	<input class="btn btn-primary" type="file" name="image" accept="image/*;capture=camera">
+      	<input class="btn btn-primary" id="image" type="file" name="image" accept="image/*|video/*;capture=camera">
       	</div>
       </div>
 
@@ -62,19 +62,27 @@
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="/js/jquery.validate.js"></script>
+<script type="text/javascript" src="http://malsup.github.io/jquery.form.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
       $("#createChallenge").validate({
         rules:{
           title:"required",
-          description:"required"
+          description:"required",
+          image:{
+            required:true,
+            accept: "image/*|video/*"
+
+          }
+
           },
         messages:{
           title:"Enter a title",
-          description:"Enter a description"
+          description:"Enter a description",
+          image:"Please choose a image or video to send"
         },
         errorClass: "help-inline",
-        errorElement: "span",
+        errorElement: "div",
         highlight:function(element, errorClass, validClass) {
           $(element).parents('.form-group').addClass('error');
         },
