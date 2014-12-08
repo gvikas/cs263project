@@ -21,8 +21,14 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
@@ -33,6 +39,8 @@ public class ChallengesServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.setContentType("text/html");
 		response.getWriter().println("Hello, this is a Challenge List. \n\n");
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
 		
        // BlobKey blobKey = new BlobKey(request.getParameter("image"));
        //  blobstoreService.serve(blobKey, response);
@@ -41,7 +49,8 @@ public class ChallengesServlet extends HttpServlet {
 //   // Key taskDataKey = KeyFactory.createKey("Guestbook", guestbookName);
 //    // Run an ancestor query to ensure we see the most up-to-date
 //    // view of the Greetings belonging to the selected Guestbook.
-		Query query = new Query("ChallengePost").addSort("date", Query.SortDirection.DESCENDING);
+		Filter filter = new FilterPredicate("user",FilterOperator.EQUAL,user.getEmail());
+		Query query = new Query("ChallengePost").addSort("date", Query.SortDirection.DESCENDING).setFilter(filter);
 		List<Entity> challenges = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
 		
 		String message = "<!DOCTYPE html><html><body>";

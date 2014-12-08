@@ -1,5 +1,34 @@
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.io.IOException" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
+<%@ page import="javax.servlet.ServletException" %>
+<%@ page import="com.google.appengine.api.datastore.DatastoreService" %>
+<%@ page import="com.google.appengine.api.datastore.DatastoreServiceFactory" %>
+<%@ page import="com.google.appengine.api.datastore.Entity" %>
+<%@ page import="com.google.appengine.api.datastore.FetchOptions" %>
+<%@ page import="com.google.appengine.api.datastore.Query" %>
+<%@ page import="com.google.appengine.api.datastore.Query.Filter" %> 
+<%@ page import="com.google.appengine.api.datastore.Query.FilterOperator" %>
+<%@ page import="com.google.appengine.api.datastore.Query.FilterPredicate" %>
+<%@ page import="com.google.appengine.api.datastore.Key" %>
+<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
+<%@ page import="com.google.appengine.api.users.User" %>
+<%@ page import="com.google.appengine.api.users.UserService" %> 
+<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
+<%@ include file="comp/navbar.html" %>
+
+<% 
+  	UserService userService = UserServiceFactory.getUserService();
+	User user = userService.getCurrentUser();
+    String userEmail = user.getEmail();
+	Key userKey = KeyFactory.createKey("User", userEmail);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  	Query query = new Query("Friendship", userKey).addSort("friendemail", Query.SortDirection.ASCENDING);
+  	List<Entity> friends = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));  
+      %>
 
 <%
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
@@ -9,8 +38,9 @@
 <html>
   <head>
     <title>uChallenge</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customizes--> 
+    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customized bootstrap--> 
    
     <!-- <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> -->
    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap-responsive.css">
@@ -20,8 +50,8 @@
 
   </head>
   <body>
+    <%  if (request.getUserPrincipal() != null){ %>  
   	<div class="container">
-
     <div class="col-lg-6 col-lg-offset-3">
       <div class="well bs-component">
   	 <form class="form-horizontal" action="<%= blobstoreService.createUploadUrl("/enqueue")%>" id="createChallenge" method="post" enctype="multipart/form-data">
@@ -48,9 +78,37 @@
       	</div>
       </div>
 
+
+      <div class="form-group">
+        <div style="height: 10em; width: 20em; overflow: auto;">
+        	<%if(friends.isEmpty()){ %>
+        	
+        		<p>Sorry, you have no friends </p>
+        		<p>Go it Friends-page, and add your friends </p>
+        	<%
+        	} else {
+        	%>
+					<h4 id="tables"> Select your friends to send </h4>
+			<%
+			int i = 0;
+			for (Entity friend : friends) {
+				String viewFriend = friend.getProperty("friendemail").toString();
+			
+			%>
+         		 <input id="<%= i %>" type="checkbox" name="friends" value="<%= viewFriend %>" />
+          			<label for="<%= i %>"><%= viewFriend %></label>
+         		 <br />
+ 	        <%
+ 	         i++;
+				}
+	    }
+	    %> 
+      	</div>
+      </div>
+
       <div class="form-group">
       	<div class="col-lg-6">
-   		   <input class="btn btn-primary" type="submit" name="Submt" value="Submit" >
+   		   <input class="btn btn-primary" type="submit" name="Submit" value="Submit" >
    		</div>
    	  </div>
   </fieldset>
@@ -59,6 +117,14 @@
       	</div>
       </div>
     </div>
+  <% } else {
+    response.sendRedirect("/");
+    response.setStatus(response.SC_MOVED_TEMPORARILY);
+    response.setHeader("Location", "/");
+
+} %>
+
+<!-- Validation script for the form --> 
 <script type="text/javascript" src="/js/bootstrap.js"></script>
 <script type="text/javascript" src="/js/jquery-1.11.1.js"></script>
 <script type="text/javascript" src="/js/jquery.validate.js"></script>

@@ -22,10 +22,10 @@
 			<div class="navbar-collapse collapse navbar-responsive-collapse">
 				<%  if (request.getUserPrincipal() != null){ %> 
 			    <ul class="nav navbar-nav">
-			      <li id="homeTab"><a href="../challenges.jsp">Challenges</a></li>
+			      <li id="homeTab"><a href="../receivedChallenges.jsp">Challenges</a></li>
 			      <li><a id="postVideoTab" href="../post.jsp">Create Challenges</a></li>
 			      <li ><a href="../challenges.jsp">My Challenges</a></li>
-			      <li ><a href="#">Friends</a>
+			      <li ><a href="../friends.jsp">Friends</a>
 			    </ul>
 			    <ul class="nav navbar-nav navbar-right">
 			    	<li ><a>Signed in as <%= UserHelper.getUserNickname() %></a></li>

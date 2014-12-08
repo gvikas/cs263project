@@ -1,0 +1,31 @@
+package users;
+
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
+public class EnqAddFriendServlet extends HttpServlet {
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	         throws ServletException, IOException { 
+		UserService userService = UserServiceFactory.getUserService();
+		User currentUser = userService.getCurrentUser();
+		String friendEmail = request.getParameter("user_mail");
+		//System.out.println("User: "+ currentUser.getEmail() + ", "+" FriendsEmail: " + friendEmail);
+		Queue queue = QueueFactory.getDefaultQueue();
+	    queue.add(withUrl("/friendworker").param("user", currentUser.getEmail()).param("friendEmail",friendEmail));
+	    
+	    response.sendRedirect("/friends.jsp");
+	}
+}

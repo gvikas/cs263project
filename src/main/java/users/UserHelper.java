@@ -28,6 +28,10 @@ public class UserHelper {
 		thisCurrentUser();
 		return currentUser.getNickname();
 	}
+	public static String getUserEmail(){
+		thisCurrentUser();
+		return currentUser.getEmail();
+	}
 
 	public static String getCurrentUserId(){
 		thisCurrentUser();
@@ -36,6 +40,10 @@ public class UserHelper {
 	
 	public static boolean isThisUserLoggedIn(){
 		return userService.isUserLoggedIn();
+	}
+	
+	public static User getUser(){
+		return currentUser;
 	}
 
 }

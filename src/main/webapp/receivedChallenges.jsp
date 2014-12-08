@@ -15,13 +15,15 @@
 <%@ page import="com.google.appengine.api.datastore.Query.Filter" %> 
 <%@ page import="com.google.appengine.api.datastore.Query.FilterOperator" %>
 <%@ page import="com.google.appengine.api.datastore.Query.FilterPredicate" %>
+<%@ page import="com.google.appengine.api.datastore.Key" %>
+<%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="users.UserHelper" %>
 
 <% ImagesService imagesService = ImagesServiceFactory.getImagesService();
    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-   Filter filter = new FilterPredicate("user",FilterOperator.EQUAL,UserHelper.getUserEmail());
-	Query query = new Query("ChallengePost").addSort("date", Query.SortDirection.DESCENDING).setFilter(filter);
-		List<Entity> challenges = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
+   Filter filter = new FilterPredicate("toUser",FilterOperator.EQUAL,UserHelper.getUserEmail());
+	Query query = new Query("ReceivedChallenges").addSort("toUser", Query.SortDirection.DESCENDING).setFilter(filter);
+		List<Entity> challengeKeys = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
 %> 
 <!DOCTYPE html>
 <html>
@@ -39,7 +41,7 @@
 				<div class="page-header">
 					<h1 id="tables"> Your Challenges </h1>
 				</div>
-				<%if(challenges.isEmpty()){ %>
+				<%if(challengeKeys.isEmpty()){ %>
 					
 					<fieldset class="whiteborder">
 					
@@ -50,12 +52,14 @@
 <%				
 				}else {
 				
-				for (Entity challenge : challenges) {
-						String challengeKey = challenge.getKey().getName();
-						String viewTitle = challenge.getProperty("title").toString();
-						String viewDescription = challenge.getProperty("description").toString();
-						String viewDate = challenge.getProperty("date").toString();
-	        			BlobKey blobKey = new BlobKey(challenge.getProperty("blobKey").toString());
+				for (Entity chalKey : challengeKeys) {
+						Key challengePostKey = KeyFactory.createKey("ChallengePost", chalKey.getProperty("challengeKey").toString());
+						Entity challengePost = datastore.get(challengePostKey);
+						String challengeKey = challengePost.getKey().getName();
+						String viewTitle = challengePost.getProperty("title").toString();
+						String viewDescription = challengePost.getProperty("description").toString();
+						String viewDate = challengePost.getProperty("date").toString();
+	        			BlobKey blobKey = new BlobKey(challengePost.getProperty("blobKey").toString());
 	        			String imageUrl = imagesService.getServingUrl(blobKey);%> 
 
   								<fieldset class="whiteborder">
