@@ -13,6 +13,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+/**
+ * This WorkerAddFriendServlet requests the friend email from the Queue.
+ * The logged-in user becomes the key, and the friend email become a property. 
+ * This is being put in the datastore, as a friendship entity. 
+ * 
+ */
+
 public class WorkerAddFriendServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		      throws ServletException, IOException {

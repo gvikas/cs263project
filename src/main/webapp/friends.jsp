@@ -19,6 +19,7 @@
 <%@ page import="users.UserHelper" %>
 
 <%@ include file="comp/navbar.html" %>
+<% response.setHeader("X-XSS-Protection","1; mode=block"); %>
 
 <!DOCTYPE html>
 <html>
@@ -106,6 +107,7 @@
 					
       </div> 
     </div>
+   </div>
   <% } else {
     response.sendRedirect("/");
     response.setStatus(response.SC_MOVED_TEMPORARILY);

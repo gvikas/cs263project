@@ -17,6 +17,7 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -33,7 +34,6 @@ import com.google.appengine.api.users.UserServiceFactory;
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 
 public class ChallengesServlet extends HttpServlet {
-	//private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -42,11 +42,7 @@ public class ChallengesServlet extends HttpServlet {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		
-       // BlobKey blobKey = new BlobKey(request.getParameter("image"));
-       //  blobstoreService.serve(blobKey, response);
-
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-//   // Key taskDataKey = KeyFactory.createKey("Guestbook", guestbookName);
 //    // Run an ancestor query to ensure we see the most up-to-date
 //    // view of the Greetings belonging to the selected Guestbook.
 		Filter filter = new FilterPredicate("user",FilterOperator.EQUAL,user.getEmail());
@@ -71,18 +67,32 @@ public class ChallengesServlet extends HttpServlet {
 		out.println(message);   
 	}
 	
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String challengeKey = request.getParameter("challengeKey");
+		String user = request.getParameter("user");
 		if (challengeKey == null || challengeKey.isEmpty()){
 			response.sendRedirect("/miss.html");
 		}
 		else{ 
-			Key challengePostKey = KeyFactory.createKey("ChallengePost", challengeKey);
-			DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		    datastore.delete(challengePostKey);
-		    response.sendRedirect("/challenges.jsp"); 
+			 DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+			 Filter filter = new FilterPredicate("toUser",FilterOperator.EQUAL,user);
+		     Query query = new Query("ReceivedChallenges").addSort("toUser", Query.SortDirection.DESCENDING).setFilter(filter);
+			 List<Entity> challengeKeysList = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
+			 for (Entity challKey : challengeKeysList){
+				 if(challKey.getProperty("challengeKey").toString().equals(challengeKey)){
+					 Boolean showChallenge = false;
+					 long cKey = challKey.getKey().getId();
+					 Entity receivedChallenge;
+					try {
+						receivedChallenge = datastore.get(KeyFactory.createKey("ReceivedChallenges", cKey));
+						receivedChallenge.setProperty("showChallenge", showChallenge);
+						datastore.put(receivedChallenge);
+					} catch (EntityNotFoundException e) {
+						e.printStackTrace();
+					}				 
+				 }
+			 }
 		}
 	}
-	
 	
 }

@@ -21,6 +21,7 @@
 <%@ include file="comp/navbar.html" %>
 
 <% 
+	response.setHeader("X-XSS-Protection","1; mode=block");
   	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
     String userEmail = user.getEmail();
@@ -28,9 +29,7 @@
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   	Query query = new Query("Friendship", userKey).addSort("friendemail", Query.SortDirection.ASCENDING);
   	List<Entity> friends = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));  
-      %>
-
-<%
+  	
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
 
@@ -40,13 +39,8 @@
     <title>uChallenge</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customized bootstrap--> 
-   
-    <!-- <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> -->
-   <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap-responsive.css">
-   
-
-   <script src="/js/fileInput.js" type="text/javascript"></script>
+   	 <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customized bootstrap--> 	
+  	 <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap-responsive.css">
 
   </head>
   <body>
@@ -95,7 +89,7 @@
 				String viewFriend = friend.getProperty("friendemail").toString();
 			
 			%>
-         		 <input id="<%= i %>" type="checkbox" name="friends" value="<%= viewFriend %>" />
+         		 <input id="<%= i %>" type="checkbox" name="friends" value="<%= viewFriend %>"/>
           			<label for="<%= i %>"><%= viewFriend %></label>
          		 <br />
  	        <%

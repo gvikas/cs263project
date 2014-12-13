@@ -1,7 +1,16 @@
 
-function sendDeleteRequest(challengeKey) {
+function sendUpdateRequest(challengeKey, user) {
 	var xhr = new XMLHttpRequest();
-	xhr.open('DELETE',"/challenges?challengeKey="+challengeKey,true);
+	xhr.open('PUT',"/challenges?user="+user+"&challengeKey="+challengeKey,true);
 	xhr.send()
-   window.location.replace("/challenges.jsp");
+	var thisURL = window.location.pathname;
+   window.location.replace(thisURL);
+}
+
+function sendAcceptedRequest(challengeKey, user) {
+	var xhr = new XMLHttpRequest();
+	xhr.open('PUT',"/challenges?user="+user+"&challengeKey="+challengeKey,true);
+	xhr.send()
+
+   window.location.replace("/newpost.jsp?challengeKey="+challengeKey);
 }

@@ -7,10 +7,11 @@
 <%@ page import="javax.servlet.ServletException" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
 <%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
-<%
+<%@ include file="comp/navbar.html" %>
+<%	response.setHeader("X-XSS-Protection","1; mode=block");
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 %>
-
+<%  if (request.getUserPrincipal() != null){ %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -83,5 +84,11 @@
  		</div>
  	  </div>
  	</div>
+   <% } else {
+    response.sendRedirect("/");
+    response.setStatus(response.SC_MOVED_TEMPORARILY);
+    response.setHeader("Location", "/");
+
+} %>	
   </body>
 </html>
