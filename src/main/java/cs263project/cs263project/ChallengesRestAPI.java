@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -16,12 +15,21 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
-
+/**
+ * This is a REST API for other who want to use uChallenge-resources
+ * I have not made a POST option for the REST API because the application is a closed application
+ * for the users. 
+ * @author Vikas
+ *
+ */
 @Path("/json")
 public class ChallengesRestAPI {
 	
 	/**
-	 * Get all the challenges in Json-format
+	 * I have a GET request for the all the challenges which will be in JSON-format when
+	 * a developer want to it. 
+	 * The idea behind this is to give the top or most popular challenges to the developers who 
+	 * to use it for some interesting.
 	 * @return
 	 */
 	@GET

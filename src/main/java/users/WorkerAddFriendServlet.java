@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
+
 /**
  * This WorkerAddFriendServlet requests the friend email from the Queue.
  * The logged-in user becomes the key, and the friend email become a property. 
@@ -23,6 +24,8 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class WorkerAddFriendServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 		      throws ServletException, IOException {
+		 DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
 		
 		String user = request.getParameter("user");
 		String frienduser = request.getParameter("friendEmail");
@@ -33,8 +36,7 @@ public class WorkerAddFriendServlet extends HttpServlet {
 			friendship.setProperty("friendemail", frienduser);
 			
 		
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-		datastore.put(friendship);
 		
+		datastore.put(friendship);
 	}
 }

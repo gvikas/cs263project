@@ -4,6 +4,11 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+/**
+ * This is just a simple UserHelper. 
+ * @author Vikas
+ *
+ */
 public class UserHelper {
 	
 	private static User currentUser;
@@ -24,13 +29,14 @@ public class UserHelper {
 		return userService.createLoginURL(currentURL);
 	}
 	
+	public static String getUserEmail(){
+		thisCurrentUser();
+		return currentUser != null ? currentUser.getEmail() : null;
+	}
+	
 	public static String getUserNickname(){
 		thisCurrentUser();
 		return currentUser.getNickname();
-	}
-	public static String getUserEmail(){
-		thisCurrentUser();
-		return currentUser.getEmail();
 	}
 
 	public static String getCurrentUserId(){
@@ -44,6 +50,10 @@ public class UserHelper {
 	
 	public static User getUser(){
 		return currentUser;
+	}
+	
+	public static boolean isItAnotherUser(String loggedInUser, Object user){
+	 return !(loggedInUser.equals(user));
 	}
 
 }

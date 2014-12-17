@@ -18,9 +18,13 @@
 <%@ page import="com.google.appengine.api.datastore.KeyFactory" %>
 <%@ page import="users.UserHelper" %>
 <%@ include file="comp/navbar.html" %>
+<%
+/**
+This receivedChallenges.jsp is where the user receives all the challenges from their friends.
+The user can accept or delete the challenges. 
+If the user accepts a challenge, he/she will be redirected to newpost.jsp to submit their challenges.
+*/
 
-
-<% 
 	ImagesService imagesService = ImagesServiceFactory.getImagesService();
    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
    Filter filter = new FilterPredicate("toUser",FilterOperator.EQUAL,UserHelper.getUserEmail());
@@ -30,7 +34,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>uChallenge</title>
+    <title>doChallenge</title>
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> 
     <link rel="stylesheet" type="text/css" href="stylesheet/style.css"> 
     <script src="/js/httpRequests.js" type="text/javascript"></script><!-- For testing purpose--> 
@@ -57,6 +61,7 @@
 				for (Entity challKey : challengeKeys) {
 					if(Boolean.valueOf(challKey.getProperty("showChallenge").toString())){
 						Key challengePostKey = KeyFactory.createKey("ChallengePost", challKey.getProperty("challengeKey").toString());
+						String fromUser = challKey.getProperty("fromUser").toString();
 						Entity challengePost = datastore.get(challengePostKey);
 						String challengeKey = challengePost.getKey().getName();
 						String viewTitle = challengePost.getProperty("title").toString();
@@ -73,8 +78,11 @@
 									<img src=<%= imageUrl %> height=512 width=512> 
 
 									<br>
+									
+									<h5> From: <%= fromUser %></h5>
 
 									<h5> Date: <%= viewDate %> </h5>
+									
 
 									<input type ="button" class="btn btn-success" value="Accept" onclick="sendAcceptedRequest('<%= challengeKey %>', '<%= UserHelper.getUserEmail() %>')"/>
 

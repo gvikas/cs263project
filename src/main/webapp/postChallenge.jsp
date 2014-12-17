@@ -19,9 +19,15 @@
 <%@ page import="com.google.appengine.api.users.UserService" %> 
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ include file="comp/navbar.html" %>
+<% 
+/**
+This postChallenge.jsp is where the user submit their challenges and send it to their friends. 
+The user can type a title, description and upload a photo with their challenges. 
+The parameters will be sent to the EnqueueServlet
+*/
+%>
 
 <% 
-	response.setHeader("X-XSS-Protection","1; mode=block");
   	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
     String userEmail = user.getEmail();
@@ -36,7 +42,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>uChallenge</title>
+    <title>doChallenge</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
    	 <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customized bootstrap--> 	

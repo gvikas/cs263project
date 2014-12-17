@@ -17,14 +17,21 @@
 <%@ page import="com.google.appengine.api.users.UserService" %> 
 <%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
 <%@ page import="users.UserHelper" %>
-
+<%@ page import="enqueue.ChallengesServlet" %>
 <%@ include file="comp/navbar.html" %>
 <% response.setHeader("X-XSS-Protection","1; mode=block"); %>
+<%
+/**
+This friends.jsp, the users can add their friends to their friends-list by their email.
+The user can also see his/her friends.
+
+*/
+%>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>uChallenge</title>
+  <title>doChallenge</title>
     
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- Customized bootstrap--> 
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css">
@@ -43,7 +50,7 @@
       <legend>Add a Friend</legend>
    	  <div class="form-group">
      	 <div class="col-lg-6">
-     		 <input type="email" class="form-control" id="user_email" placeholder="Email" name="user_mail">
+     		 <input type="t" class="form-control" id="user_email" placeholder="Email" name="user_mail">
      	 </div>
    	  </div> 
 
@@ -65,7 +72,7 @@
 		 Key userKey = KeyFactory.createKey("User", userEmail);
       	 DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   	     Query query = new Query("Friendship", userKey).addSort("friendemail", Query.SortDirection.ASCENDING);
-  		 List<Entity> friends = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));  
+  		 List<Entity> friends = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));  
       %>
 		 <div class="well bs-component">
 				<%if(friends.isEmpty()){ %>
@@ -88,7 +95,6 @@
 					</thead>
 				<tbody>
 <%
-				
 				for (Entity friend : friends) {
 						String viewFriend = friend.getProperty("friendemail").toString();
 						%> 
@@ -109,10 +115,7 @@
     </div>
    </div>
   <% } else {
-    response.sendRedirect("/");
-    response.setStatus(response.SC_MOVED_TEMPORARILY);
-    response.setHeader("Location", "/");
-
+	  ChallengesServlet.reDirectToHomepage(response);
 } %>
 
   </body>

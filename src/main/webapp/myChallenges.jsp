@@ -15,18 +15,26 @@
 <%@ page import="com.google.appengine.api.datastore.Query.FilterOperator" %>
 <%@ page import="com.google.appengine.api.datastore.Query.FilterPredicate" %>
 <%@ page import="users.UserHelper" %>
+<%@ page import="enqueue.ChallengesServlet" %>
 <%@ include file="comp/navbar.html" %>
-<%  if (request.getUserPrincipal() != null){ %>
-<% ImagesService imagesService = ImagesServiceFactory.getImagesService();
+<%
+/**
+This myChallenges.jsp is a list of all the user have made in his past.
+When the user press the My-Challenges tab on the navbar, his/she will get a list of their challenges
+*/
+%>
+
+<%  if (request.getUserPrincipal() != null){ 
+ImagesService imagesService = ImagesServiceFactory.getImagesService();
    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
    Filter filter = new FilterPredicate("user",FilterOperator.EQUAL,UserHelper.getUserEmail());
 	Query query = new Query("ChallengePost").addSort("date", Query.SortDirection.DESCENDING).setFilter(filter);
-		List<Entity> challenges = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
+		List<Entity> challenges = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(20));
 %> 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>uChallenge</title>
+    <title>doChallenge</title>
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> 
     <link rel="stylesheet" type="text/css" href="stylesheet/style.css"> 
     <script src="/js/httpRequests.js" type="text/javascript"></script><!-- For testing purpose--> 
@@ -82,9 +90,7 @@
  	</div>
   </body>
     <% } else {
-    response.sendRedirect("/");
-    response.setStatus(response.SC_MOVED_TEMPORARILY);
-    response.setHeader("Location", "/");
+    	  ChallengesServlet.reDirectToHomepage(response);
 
 } %> 
 </html>

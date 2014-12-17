@@ -8,17 +8,29 @@
 <%@ page import="com.google.appengine.api.blobstore.BlobKey" %> 
 <%@ page import="com.google.appengine.api.images.ImagesService"%> 
 <%@ page import="com.google.appengine.api.images.ImagesServiceFactory"%> 
+<%@ page import="com.google.appengine.api.memcache.MemcacheService" %>
 <%@ page import="com.google.appengine.api.memcache.MemcacheServiceFactory" %>
-<%@ page import="com.google.appengine.api.memcache.AsyncMemcacheService" %>
 <%@ page import="com.google.appengine.api.memcache.ErrorHandlers" %>
-<%@ page import="java.util.concurrent.Future" %>
 <%@ page import="java.util.logging.Level" %>
+<%@ page import="users.UserHelper" %>
+<%@ page import="enqueue.ChallengesServlet" %>
 <%@ include file="comp/navbar.html" %>
+<% response.setHeader("X-XSS-Protection","1; mode=block");%>
+<%
+/**
+This challengeview.jsp shows the newly created challenge by the user. 
+I haved added some check in this file like 
+If the user is not logged in, then you are redirected to homepage.
+If the is another user trying to acces another user's post, the user will be redirected to Homepage 
+I included memcache here. 
+*/
+
+%>
 
 <!DOCTYPE html>
 <html>
   <head>
-    <title>uChallenge</title>
+    <title>doChallenge</title>
     
     <link rel="stylesheet" type="text/css" href="stylesheet/bootstrap.css"> <!-- For testing purpose--> 
   </head>
@@ -33,27 +45,28 @@
  		
  		String challengeKey = request.getParameter("challengeKey");
  		if (challengeKey == null || challengeKey.isEmpty()){ 
- 	%>
- 		<p> key is missing</p>
- 	<%
+ 			ChallengesServlet.reDirectToHomepage(response);
 	 	}
  		else { 
- 		AsyncMemcacheService asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
-    	asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+ 		MemcacheService memcache = MemcacheServiceFactory.getMemcacheService();
+ 		memcache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
  		ImagesService imagesService = ImagesServiceFactory.getImagesService();
- 		Future<Object> futureChallenge = asyncCache.get(challengeKey);
  		Entity challengePost;
  		try {
- 			challengePost =  (Entity) futureChallenge.get();
+ 			challengePost =  (Entity) memcache.get(challengeKey);
+
  			if (challengePost == null){
  				Key challengePostKey = KeyFactory.createKey("ChallengePost", challengeKey);
  				DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
  				Entity challengePostFromDB = datastore.get(challengePostKey);
  				
- 				asyncCache.put(challengeKey, challengePostFromDB);
+ 				memcache.put(challengeKey, challengePostFromDB);
  				response.sendRedirect("/challengeview.jsp?challengeKey="+challengeKey);
  				response.setStatus(response.SC_MOVED_TEMPORARILY);
  				response.setHeader("Location", "/challengeview.jsp?challengeKey="+challengeKey);
+ 			}
+ 			if(UserHelper.isItAnotherUser(UserHelper.getUserEmail(),challengePost.getProperty("user"))){
+ 				ChallengesServlet.reDirectToHomepage(response);
  			}
  			String title = challengePost.getProperty("title").toString(); 
 			String description = challengePost.getProperty("description").toString();
@@ -86,9 +99,7 @@
  	  </div>
  	</div>
   <% } else {
-    response.sendRedirect("/");
-    response.setStatus(response.SC_MOVED_TEMPORARILY);
-    response.setHeader("Location", "/");
+	  ChallengesServlet.reDirectToHomepage(response);
 
 } %> 	
   </body>
